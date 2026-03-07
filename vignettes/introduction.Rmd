@@ -1,0 +1,151 @@
+---
+title: "Introduction to INCVCommunityDetection"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to INCVCommunityDetection}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
+
+`INCVCommunityDetection` implements **In-sample Network Cross-Validation
+(INCV)** for selecting the number of communities in Stochastic Block Models
+(SBM). The package also provides competing methods — **CROISSANT**, **Edge
+Cross-Validation (ECV)**, and **Node Cross-Validation (NCV)** — for
+comprehensive model selection in network analysis.
+
+## Simulating a network
+
+We start by generating a network from a planted-partition SBM with 3
+communities, 150 nodes, within-community connection probability 0.5, and
+between-community probability 0.05.
+
+```{r simulate}
+library(INCVCommunityDetection)
+
+set.seed(42)
+net <- community.sim(k = 3, n = 150, n1 = 50, p = 0.5, q = 0.05)
+table(net$membership)
+```
+
+The adjacency matrix is a 150 × 150 binary symmetric matrix:
+
+```{r adj-dim, fig.width=5, fig.height=5}
+dim(net$adjacency)
+ord <- order(net$membership)
+image(net$adjacency[ord, ord],
+      main = "Adjacency matrix (3-community SBM, reordered)",
+      xlab = "Node", ylab = "Node")
+```
+
+## Selecting K with INCV (f-fold)
+
+The main function `nscv.f.fold()` partitions nodes into `f` folds and uses
+spectral clustering on the training subgraph.  Held-out nodes are assigned to
+communities based on their connections to training nodes, and the held-out
+negative log-likelihood and MSE are computed.
+
+```{r incv-ffold}
+result <- nscv.f.fold(net$adjacency, k.vec = 2:6, f = 5)
+result$k.loss   # K selected by neg-log-likelihood
+result$k.mse    # K selected by MSE
+```
+
+We can inspect the full CV loss curve:
+
+```{r loss-curve, fig.width=6, fig.height=4}
+plot(2:6, result$cv.loss, type = "b", pch = 19,
+     xlab = "Number of communities (K)",
+     ylab = "CV Negative Log-Likelihood",
+     main = "INCV f-fold: CV loss by K")
+abline(v = result$k.loss, lty = 2, col = "red")
+```
+
+## Selecting K with INCV (random split)
+
+An alternative is to use repeated random node splits instead of fixed folds:
+
+```{r incv-random}
+result2 <- nscv.random.split(net$adjacency, k.vec = 2:6,
+                             split = 0.66, ite = 20)
+result2$k.chosen
+```
+
+```{r random-curve, fig.width=6, fig.height=4}
+plot(2:6, result2$cv.loss, type = "b", pch = 19,
+     xlab = "Number of communities (K)",
+     ylab = "CV Negative Log-Likelihood",
+     main = "INCV random-split: CV loss by K")
+abline(v = result2$k.chosen, lty = 2, col = "red")
+```
+
+## Comparing with ECV and NCV
+
+### Edge Cross-Validation
+
+ECV holds out random edges and evaluates the predictive fit of a blockmodel
+reconstruction.  It jointly selects between SBM and DCBM.
+
+```{r ecv}
+ecv <- ECV.for.blockmodel(net$adjacency, max.K = 6, B = 3)
+ecv$dev.model   # best by deviance
+ecv$l2.model    # best by L2
+ecv$auc.model   # best by AUC
+```
+
+### Node Cross-Validation
+
+NCV holds out random nodes and evaluates predictions on the held-out
+sub-network:
+
+```{r ncv}
+ncv <- NCV.for.blockmodel(net$adjacency, max.K = 6, cv = 3)
+ncv$dev.model
+ncv$l2.model
+```
+
+## Summary of methods
+
+| Method | Function | Splits | Selects K | Selects model type |
+|--------|----------|--------|-----------|-------------------|
+| INCV f-fold | `nscv.f.fold()` | Nodes into f folds | Yes | No (SBM only) |
+| INCV random | `nscv.random.split()` | Random node split | Yes | No (SBM only) |
+| ECV | `ECV.for.blockmodel()` | Random edge holdout | Yes | Yes (SBM vs DCBM) |
+| NCV | `NCV.for.blockmodel()` | Node folds | Yes | Yes (SBM vs DCBM) |
+| CROISSANT | `croissant.blockmodel()` | Overlapping subsamples | Yes | Yes (SBM vs DCBM) |
+
+## Spectral clustering and probability estimation
+
+The building blocks are also available directly:
+
+```{r spectral}
+cl <- SBM.spectral.clustering(net$adjacency, k = 3)
+table(cl$cluster)
+
+prob <- SBM.prob(cl$cluster, k = 3, A = net$adjacency, restricted = TRUE)
+round(prob$p.matrix, 3)
+```
+
+## Distance-decaying SBM simulation
+
+For more realistic simulations, `community.sim.sbm()` generates networks where
+block probabilities decay with community distance:
+
+```{r sbm-decay}
+net2 <- community.sim.sbm(n = 120, n1 = 40, eta = 0.3, rho = 0.2, K = 4)
+round(net2$conn, 4)
+```
+
+## Session info
+
+```{r session}
+sessionInfo()
+```
