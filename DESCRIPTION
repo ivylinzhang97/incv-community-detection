@@ -14,6 +14,8 @@ Description: Implements Inductive Node-Splitting Cross-Validation (INCV) for
     Block Models (DCBM), with multiple loss functions (L2, binomial
     deviance, AUC). Includes network simulation utilities for SBM, RDPG,
     and latent space models.
+URL: https://github.com/ivylinzhang97/incv-community-detection
+BugReports: https://github.com/ivylinzhang97/incv-community-detection/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.3

@@ -21,6 +21,14 @@ methods (CROISSANT, ECV, NCV).
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/ivylinzhang97/incv-community-detection}
+  \item Report bugs at \url{https://github.com/ivylinzhang97/incv-community-detection/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Lin Zhang \email{linzhang1126@gmail.com}
 

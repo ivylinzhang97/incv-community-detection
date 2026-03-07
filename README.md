@@ -18,7 +18,10 @@ This package implements **Inductive Node-Splitting Cross-Validation (INCV)** for
 ## Installation
 
 ```r
-# Install from GitHub
+# From CRAN
+install.packages("INCVCommunityDetection")
+
+# Or install the development version from GitHub
 devtools::install_github("ivylinzhang97/incv-community-detection")
 ```
 
@@ -77,7 +80,7 @@ cat("CROISSANT (L2):", cr$l2.model, "\n")
 
 ## Dependencies
 
-**Required**: Matrix, RSpectra, ClusterR, irlba, softImpute, parallel, cluster, Rfast, data.table, IMIFA
+**Required**: Matrix, RSpectra, ClusterR, irlba, parallel, cluster, Rfast, data.table, IMIFA
 
 **Optional** (for latent space methods): latentnet, rdist
 
