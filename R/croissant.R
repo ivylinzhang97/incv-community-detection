@@ -360,6 +360,8 @@ croissant.latent <- function(A, d.cand, s, o, R,
                              ncore = 1) {
   if (!requireNamespace("latentnet", quietly = TRUE))
     stop("Package 'latentnet' is required for croissant.latent()")
+  if (!requireNamespace("network", quietly = TRUE))
+    stop("Package 'network' is required for croissant.latent()")
   if (!requireNamespace("rdist", quietly = TRUE))
     stop("Package 'rdist' is required for croissant.latent()")
 
@@ -388,8 +390,8 @@ croissant.latent <- function(A, d.cand, s, o, R,
     dd <- raw.ind[ii, "dd"]
     sonn <- c(over[[r]], non.over[[r]][((q - 1) * m + 1):(q * m)])
     A.sonn <- A[sonn, sonn]
-    net.sonn <- latentnet::as.network(A.sonn, matrix.type = "adjacency")
-    out.lat <- latentnet::ergmm(net.sonn ~ latentnet::euclidean(d = d.cand[dd]),
+    net.sonn <- network::as.network(A.sonn, matrix.type = "adjacency")
+    out.lat <- latentnet::ergmm(net.sonn ~ euclidean(d = d.cand[dd]),
                                 tofit = "mle")
     list(Z.hat = out.lat$mle$Z, beta.hat = out.lat$mle$beta)
   }, mc.cores = ncore)

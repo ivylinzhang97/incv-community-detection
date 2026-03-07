@@ -25,7 +25,6 @@ Imports:
     RSpectra,
     ClusterR,
     irlba,
-    softImpute,
     parallel,
     cluster,
     Rfast,
@@ -34,6 +33,7 @@ Imports:
     stats
 Suggests:
     latentnet,
+    network,
     rdist,
     igraph,
     testthat (>= 3.0.0),
