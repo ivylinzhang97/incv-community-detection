@@ -34,3 +34,7 @@ A list with:
 \description{
 Selects the embedding rank for an RDPG by holding out random edges.
 }
+\details{
+The algorithm is based on foundation code from Lin Zhang's PhD
+dissertation.
+}

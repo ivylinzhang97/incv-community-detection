@@ -3,6 +3,9 @@
 #' Selects both the model type (SBM vs DCBM) and number of communities
 #' by holding out random edges and evaluating predictive performance.
 #'
+#' The algorithm is based on foundation code from Lin Zhang's PhD
+#' dissertation in 2019.
+#'
 #' @param A Adjacency matrix (n x n).
 #' @param max.K Maximum number of communities to consider.
 #' @param cv Number of cross-validation folds (NULL for holdout; default NULL).
@@ -281,6 +284,9 @@ ECV.for.blockmodel <- function(A, max.K, cv = NULL, B = 3, holdout.p = 0.1,
 #' Edge Cross-Validation for RDPG rank selection
 #'
 #' Selects the embedding rank for an RDPG by holding out random edges.
+#'
+#' The algorithm is based on foundation code from Lin Zhang's PhD
+#' dissertation.
 #'
 #' @param A Adjacency matrix.
 #' @param max.K Maximum rank to consider.

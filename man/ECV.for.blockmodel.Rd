@@ -44,3 +44,7 @@ A list with loss vectors and selected model strings:
 Selects both the model type (SBM vs DCBM) and number of communities
 by holding out random edges and evaluating predictive performance.
 }
+\details{
+The algorithm is based on foundation code from Lin Zhang's PhD
+dissertation.
+}
