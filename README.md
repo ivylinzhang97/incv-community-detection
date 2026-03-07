@@ -1,10 +1,12 @@
-# INCVCommunityDetection
+# INCV Community Detection
 
 Inductive Node-Splitting Cross-Validation (INCV) for community detection in network data.
 
+Available in both **R** and **Python**.
+
 ## Overview
 
-This package implements **Inductive Node-Splitting Cross-Validation (INCV)** for selecting the number of communities in Stochastic Block Models (SBMs). It also provides competing methods — **CROISSANT**, **Edge Cross-Validation (ECV)**, and **Node Cross-Validation (NCV)** — for comprehensive model selection in network analysis.
+This repository implements **Inductive Node-Splitting Cross-Validation (INCV)** for selecting the number of communities in Stochastic Block Models (SBMs). It also provides competing methods — **CROISSANT**, **Edge Cross-Validation (ECV)**, and **Node Cross-Validation (NCV)** — for comprehensive model selection in network analysis.
 
 ### Key features
 
@@ -15,19 +17,21 @@ This package implements **Inductive Node-Splitting Cross-Validation (INCV)** for
 - **Network simulation**: Generators for SBM, DCBM, RDPG, and latent space models.
 - **Multiple loss functions**: L2, binomial deviance, and AUC.
 
-## Installation
+---
+
+## R Package
+
+### Installation
 
 ```r
-# From CRAN
+# From CRAN (once accepted)
 install.packages("INCVCommunityDetection")
 
 # Or install the development version from GitHub
 devtools::install_github("ivylinzhang97/incv-community-detection")
 ```
 
-## Quick start
-
-### Simulate a network and select K with INCV
+### Quick start
 
 ```r
 library(INCVCommunityDetection)
@@ -39,33 +43,9 @@ net <- community.sim(k = 3, n = 300, n1 = 100, p = 0.3, q = 0.05)
 result <- nscv.f.fold(net$adjacency, k.vec = 2:6, f = 10)
 cat("Selected K (loss):", result$k.loss, "\n")
 cat("Selected K (MSE):", result$k.mse, "\n")
-
-# Random-split INCV
-result2 <- nscv.random.split(net$adjacency, k.vec = 2:6, ite = 50)
-cat("Selected K:", result2$k.chosen, "\n")
 ```
 
-### Compare with ECV and NCV
-
-```r
-# Edge Cross-Validation
-ecv <- ECV.for.blockmodel(net$adjacency, max.K = 6, B = 5)
-cat("ECV model (deviance):", ecv$dev.model, "\n")
-
-# Node Cross-Validation
-ncv <- NCV.for.blockmodel(net$adjacency, max.K = 6, cv = 3)
-cat("NCV model (deviance):", ncv$dev.model, "\n")
-```
-
-### CROISSANT for joint SBM/DCBM selection
-
-```r
-cr <- croissant.blockmodel(net$adjacency, K.CAND = 1:6,
-                           s = 3, o = 100, R = 2, ncore = 1)
-cat("CROISSANT (L2):", cr$l2.model, "\n")
-```
-
-## Package structure
+### R package structure
 
 | File | Contents |
 |------|----------|
@@ -78,11 +58,55 @@ cat("CROISSANT (L2):", cr$l2.model, "\n")
 | `R/simulation.R` | `community.sim()`, `community.sim.sbm()`, `blockmodel.gen.fast()`, `sparse.RDPG.gen()`, `latent.gen()` |
 | `R/utils.R` | `edge.index.map()`, `neglog()`, `l2()`, `bin.dev()`, `AUC()` |
 
+---
+
+## Python Package
+
+### Installation
+
+```bash
+# From PyPI (once published)
+pip install incv-community-detection
+
+# Or install from GitHub
+pip install "git+https://github.com/ivylinzhang97/incv-community-detection.git#subdirectory=python"
+
+# With optional network plotting support
+pip install "incv-community-detection[network]"
+```
+
+### Quick start
+
+```python
+import numpy as np
+from incv import community_sim, nscv_f_fold
+
+rng = np.random.default_rng(42)
+membership, A = community_sim(k=3, n=300, n1=60, p=0.3, q=0.1, rng=rng)
+
+# Run 10-fold INCV
+result = nscv_f_fold(A, k_vec=list(range(2, 8)), f=10, rng=rng)
+print(f"Selected K (NLL): {result['k_loss']}")
+print(f"Selected K (MSE): {result['k_mse']}")
+```
+
+### Python package structure
+
+| Module | Contents |
+|--------|----------|
+| `incv.core` | `community_sim()`, `community_sim_sbm()`, `sbm_spectral_clustering()`, `sbm_prob()`, `nscv_f_fold()`, `nscv_random_split()` |
+| `incv.competitors` | `ecv_block()`, `ncv_select()` |
+| `incv.simulations` | `sim_folds()`, `sim_community()`, `sim_compare()` |
+| `incv.applications` | `load_trade_data()`, `load_senate_data()` |
+| `incv.plotting` | `plot_cv_loss()`, `plot_network()`, `plot_fold_comparison()`, `plot_community_comparison()` |
+
+---
+
 ## Dependencies
 
-**Required**: Matrix, RSpectra, ClusterR, irlba, parallel, cluster, Rfast, data.table, IMIFA
+**R**: Matrix, RSpectra, ClusterR, irlba, parallel, cluster, Rfast, data.table, IMIFA; optional: latentnet, rdist
 
-**Optional** (for latent space methods): latentnet, rdist
+**Python**: numpy, scipy, scikit-learn, pandas, matplotlib; optional: networkx
 
 ## License
 
