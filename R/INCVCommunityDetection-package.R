@@ -1,6 +1,6 @@
-#' INCVCommunityDetection: In-Sample Network Cross-Validation for Community Detection
+#' INCVCommunityDetection: Inductive Node-Splitting Cross-Validation for Community Detection
 #'
-#' Implements In-sample Network Cross-Validation (INCV) for selecting the
+#' Implements Inductive Node-Splitting Cross-Validation (INCV) for selecting the
 #' number of communities in stochastic block models, along with competing
 #' methods (CROISSANT, ECV, NCV).
 #'

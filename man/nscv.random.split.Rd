@@ -2,7 +2,7 @@
 % Please edit documentation in R/incv.R
 \name{nscv.random.split}
 \alias{nscv.random.split}
-\title{In-sample Network Cross-Validation with random node splits}
+\title{Inductive Node-Splitting Cross-Validation with random node splits}
 \usage{
 nscv.random.split(
   A,

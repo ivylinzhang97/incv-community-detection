@@ -1,4 +1,4 @@
-#' In-sample Network Cross-Validation with f-fold splitting
+#' Inductive Node-Splitting Cross-Validation with f-fold splitting
 #'
 #' Performs f-fold node-split cross-validation to select the number of
 #' communities \code{k} in a Stochastic Block Model. Nodes are randomly
@@ -145,7 +145,7 @@ nscv.f.fold <- function(A, k.vec = 2:6, restricted = TRUE, f = 10,
        cv.loss = cv.loss, cv.mse = cv.mse)
 }
 
-#' In-sample Network Cross-Validation with random node splits
+#' Inductive Node-Splitting Cross-Validation with random node splits
 #'
 #' Performs repeated random-split node-level cross-validation. At each
 #' iteration a random fraction \code{split} of nodes is used for training.

@@ -1,10 +1,10 @@
 # INCVCommunityDetection
 
-In-sample Network Cross-Validation (INCV) for community detection in network data.
+Inductive Node-Splitting Cross-Validation (INCV) for community detection in network data.
 
 ## Overview
 
-This package implements **INCV** for selecting the number of communities in Stochastic Block Models (SBMs). It also provides competing methods — **CROISSANT**, **Edge Cross-Validation (ECV)**, and **Node Cross-Validation (NCV)** — for comprehensive model selection in network analysis.
+This package implements **Inductive Node-Splitting Cross-Validation (INCV)** for selecting the number of communities in Stochastic Block Models (SBMs). It also provides competing methods — **CROISSANT**, **Edge Cross-Validation (ECV)**, and **Node Cross-Validation (NCV)** — for comprehensive model selection in network analysis.
 
 ### Key features
 

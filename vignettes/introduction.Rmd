@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-`INCVCommunityDetection` implements **In-sample Network Cross-Validation
+`INCVCommunityDetection` implements **Inductive Node-Splitting Cross-Validation
 (INCV)** for selecting the number of communities in Stochastic Block Models
 (SBM). The package also provides competing methods — **CROISSANT**, **Edge
 Cross-Validation (ECV)**, and **Node Cross-Validation (NCV)** — for

@@ -4,9 +4,9 @@
 \name{INCVCommunityDetection-package}
 \alias{INCVCommunityDetection}
 \alias{INCVCommunityDetection-package}
-\title{INCVCommunityDetection: In-Sample Network Cross-Validation for Community Detection}
+\title{INCVCommunityDetection: Inductive Node-Splitting Cross-Validation for Community Detection}
 \description{
-Implements In-sample Network Cross-Validation (INCV) for selecting the
+Implements Inductive Node-Splitting Cross-Validation (INCV) for selecting the
 number of communities in stochastic block models, along with competing
 methods (CROISSANT, ECV, NCV).
 }

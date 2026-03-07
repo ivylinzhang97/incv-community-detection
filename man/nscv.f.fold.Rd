@@ -2,7 +2,7 @@
 % Please edit documentation in R/incv.R
 \name{nscv.f.fold}
 \alias{nscv.f.fold}
-\title{In-sample Network Cross-Validation with f-fold splitting}
+\title{Inductive Node-Splitting Cross-Validation with f-fold splitting}
 \usage{
 nscv.f.fold(
   A,
