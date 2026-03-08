@@ -480,7 +480,11 @@ def nscv_random_split(A, k_vec=None, restricted=True, split=0.66,
 
     Returns
     -------
-    dict with keys ``k_chosen``, ``k_choice``, ``cv_loss``.
+    dict with keys:
+        - ``k_loss`` : int – K selected by negative log-likelihood.
+        - ``k_mse`` : int – K selected by MSE.
+        - ``cv_loss`` : np.ndarray – mean NLL per candidate.
+        - ``cv_mse`` : np.ndarray – mean MSE per candidate.
     """
     if k_vec is None:
         k_vec = list(range(2, 7))
@@ -490,6 +494,7 @@ def nscv_random_split(A, k_vec=None, restricted=True, split=0.66,
     n = A.shape[0]
     num_k = len(k_vec)
     loss_f = np.zeros((ite, num_k))
+    mse_f = np.zeros((ite, num_k))
     node = np.arange(n)
 
     for i in range(ite):
@@ -556,6 +561,7 @@ def nscv_random_split(A, k_vec=None, restricted=True, split=0.66,
                 te_zero_x, te_zero_y = np.array([], dtype=int), np.array([], dtype=int)
 
             te_nll = 0.0
+            te_mse = 0.0
             for s in range(1, k + 1):
                 for t in range(s, k + 1):
                     if s == t:
@@ -569,6 +575,7 @@ def nscv_random_split(A, k_vec=None, restricted=True, split=0.66,
                         )) if len(te_zero_x) > 0 else 0
                         prob = p_matrix[s - 1, s - 1]
                         te_nll += neglog(connect, prob) + neglog(disconnect, 1 - prob)
+                        te_mse += connect * (1 - prob) ** 2 + disconnect * prob ** 2
                     else:
                         connect = 0
                         disconnect = 0
@@ -590,14 +597,19 @@ def nscv_random_split(A, k_vec=None, restricted=True, split=0.66,
                             ))
                         prob = p_matrix[s - 1, t - 1]
                         te_nll += neglog(connect, prob) + neglog(disconnect, 1 - prob)
+                        te_mse += connect * (1 - prob) ** 2 + disconnect * prob ** 2
 
             loss_f[i, j_idx] = te_nll
+            mse_f[i, j_idx] = te_mse
 
     cv_loss = loss_f.mean(axis=0)
-    k_chosen = k_vec[np.argmin(cv_loss)]
+    cv_mse = mse_f.mean(axis=0)
+    k_loss = k_vec[np.argmin(cv_loss)]
+    k_mse = k_vec[np.argmin(cv_mse)]
 
     return {
-        "k_chosen": k_chosen,
-        "k_choice": k_vec,
+        "k_loss": k_loss,
+        "k_mse": k_mse,
         "cv_loss": cv_loss,
+        "cv_mse": cv_mse,
     }

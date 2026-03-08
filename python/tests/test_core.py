@@ -113,11 +113,15 @@ class TestINCV:
     def test_random_split_returns_expected_keys(self, network):
         rng = np.random.default_rng(42)
         result = nscv_random_split(network, k_vec=[2, 3, 4], ite=10, rng=rng)
-        assert "k_chosen" in result
+        assert "k_loss" in result
+        assert "k_mse" in result
         assert "cv_loss" in result
+        assert "cv_mse" in result
         assert len(result["cv_loss"]) == 3
+        assert len(result["cv_mse"]) == 3
 
     def test_random_split_selects_correct_k(self, network):
         rng = np.random.default_rng(42)
         result = nscv_random_split(network, k_vec=[2, 3, 4, 5], ite=20, rng=rng)
-        assert result["k_chosen"] in [2, 3, 4, 5]
+        assert result["k_loss"] in [2, 3, 4, 5]
+        assert result["k_mse"] in [2, 3, 4, 5]
