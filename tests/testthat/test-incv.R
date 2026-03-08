@@ -27,6 +27,8 @@ test_that("nscv.random.split runs and returns valid result", {
   net <- community.sim(k = 3, n = 150, n1 = 50, p = 0.5, q = 0.05)
   result <- nscv.random.split(net$adjacency, k.vec = 2:4,
                               split = 0.66, ite = 10)
-  expect_true(result$k.chosen %in% 2:4)
+  expect_true(result$k.loss %in% 2:4)
+  expect_true(result$k.mse %in% 2:4)
   expect_length(result$cv.loss, 3)
+  expect_length(result$cv.mse, 3)
 })

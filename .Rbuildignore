@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^README\.md$
 ^tests/test_standalone\.R$
+^python$

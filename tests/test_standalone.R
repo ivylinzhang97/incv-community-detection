@@ -137,8 +137,9 @@ check("nscv.f.fold: loss method", {
 # --- INCV random split --------------------------------------------------------
 check("nscv.random.split: runs and selects K", {
   res <- nscv.random.split(net2$adjacency, k.vec = 2:4, ite = 10)
-  cat("   k.chosen =", res$k.chosen, "\n")
-  stopifnot(res$k.chosen %in% 2:4, length(res$cv.loss) == 3)
+  cat("   k.loss =", res$k.loss, " k.mse =", res$k.mse, "\n")
+  stopifnot(res$k.loss %in% 2:4, res$k.mse %in% 2:4,
+            length(res$cv.loss) == 3, length(res$cv.mse) == 3)
 })
 
 # --- Summary ------------------------------------------------------------------

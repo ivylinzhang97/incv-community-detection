@@ -76,7 +76,7 @@ An alternative is to use repeated random node splits instead of fixed folds:
 ```{r incv-random}
 result2 <- nscv.random.split(net$adjacency, k.vec = 2:6,
                              split = 0.66, ite = 20)
-result2$k.chosen
+result2$k.loss
 ```
 
 ```{r random-curve, fig.width=6, fig.height=4}
@@ -84,7 +84,7 @@ plot(2:6, result2$cv.loss, type = "b", pch = 19,
      xlab = "Number of communities (K)",
      ylab = "CV Negative Log-Likelihood",
      main = "INCV random-split: CV loss by K")
-abline(v = result2$k.chosen, lty = 2, col = "red")
+abline(v = result2$k.loss, lty = 2, col = "red")
 ```
 
 ## Comparing with ECV and NCV

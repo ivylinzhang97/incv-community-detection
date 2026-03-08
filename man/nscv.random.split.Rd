@@ -35,9 +35,10 @@ and one between-community probability). Default \code{TRUE}.}
 }
 \value{
 A list with:
-  \item{k.chosen}{Selected \code{k} minimising average CV loss.}
-  \item{k.choice}{The candidate \code{k.vec}.}
+  \item{k.loss}{Selected \code{k} that minimises CV negative log-likelihood.}
+  \item{k.mse}{Selected \code{k} that minimises CV MSE.}
   \item{cv.loss}{Average CV negative log-likelihood for each \code{k}.}
+  \item{cv.mse}{Average CV MSE for each \code{k}.}
 }
 \description{
 Performs repeated random-split node-level cross-validation. At each

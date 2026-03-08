@@ -154,9 +154,10 @@ nscv.f.fold <- function(A, k.vec = 2:6, restricted = TRUE, f = 10,
 #' @param split Fraction of nodes used for training (default 0.66).
 #' @param ite Number of random split iterations (default 100).
 #' @return A list with:
-#'   \item{k.chosen}{Selected \code{k} minimising average CV loss.}
-#'   \item{k.choice}{The candidate \code{k.vec}.}
+#'   \item{k.loss}{Selected \code{k} that minimises CV negative log-likelihood.}
+#'   \item{k.mse}{Selected \code{k} that minimises CV MSE.}
 #'   \item{cv.loss}{Average CV negative log-likelihood for each \code{k}.}
+#'   \item{cv.mse}{Average CV MSE for each \code{k}.}
 #' @export
 nscv.random.split <- function(A, k.vec = 2:6, restricted = TRUE,
                               split = 0.66, ite = 100,
@@ -164,6 +165,7 @@ nscv.random.split <- function(A, k.vec = 2:6, restricted = TRUE,
   n <- ncol(A)
   cv.loss <- rep(0, length(k.vec))
   loss.f <- matrix(0, nrow = ite, ncol = length(k.vec))
+  mse.f  <- matrix(0, nrow = ite, ncol = length(k.vec))
   cv.loss <- rep(0, length(k.vec))
   node <- 1:n
 
@@ -226,6 +228,8 @@ nscv.random.split <- function(A, k.vec = 2:6, restricted = TRUE,
       p.matrix <- SBM.prob(cluster, k, AA, restricted)$p.matrix
 
       te.negloglike <- 0
+      te.mse <- 0
+
       te.edge.vector <- c(A22)[c(upper.tri(A22))]
       te.one <- edge.index.map(which(te.edge.vector == 1))
       te.zero <- edge.index.map(which(te.edge.vector == 0))
@@ -240,6 +244,7 @@ nscv.random.split <- function(A, k.vec = 2:6, restricted = TRUE,
             p <- p.matrix[s, s]
             te.negloglike <- te.negloglike +
               neglog(connect, p) + neglog(disconnect, 1 - p)
+            te.mse <- te.mse + connect * (1 - p)^2 + disconnect * p^2
           } else {
             connect <- sum((te.cluster[te.one$x] == s) &
                              (te.cluster[te.one$y] == t)) +
@@ -252,13 +257,18 @@ nscv.random.split <- function(A, k.vec = 2:6, restricted = TRUE,
             q <- p.matrix[s, t]
             te.negloglike <- te.negloglike +
               neglog(connect, q) + neglog(disconnect, 1 - q)
+            te.mse <- te.mse + connect * (1 - q)^2 + disconnect * q^2
           }
         }
       }
       loss.f[i, j] <- te.negloglike
+      mse.f[i, j] <- te.mse
     }
     cv.loss <- colMeans(loss.f)
-    k.chosen <- k.vec[which.min(cv.loss)]
+    cv.mse <- colMeans(mse.f)
+    k.loss <- k.vec[which.min(cv.loss)]
+    k.mse  <- k.vec[which.min(cv.mse)]
   }
-  list(k.chosen = k.chosen, k.choice = k.vec, cv.loss = cv.loss)
+  list(k.loss = k.loss, k.mse = k.mse,
+       cv.loss = cv.loss, cv.mse = cv.mse)
 }

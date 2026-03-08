@@ -55,7 +55,8 @@ result2 <- nscv.random.split(
 )
 
 cat("\nINCV random-split results:\n")
-cat("  K selected:", result2$k.chosen, "\n")
+cat("  K selected (loss):", result2$k.loss, "\n")
+cat("  K selected (MSE):", result2$k.mse, "\n")
 
 # ── 4. Compare with ECV ───────────────────────────────────────────
 ecv <- ECV.for.blockmodel(net$adjacency, max.K = 7, B = 3)
@@ -82,6 +83,6 @@ cat("  Between-community q:", round(prob$p.matrix[1, 2], 3), "\n")
 cat("\n══ Summary ══════════════════════════════════════\n")
 cat("  True K = 3\n")
 cat("  INCV f-fold  selected K =", result$k.loss, "\n")
-cat("  INCV random  selected K =", result2$k.chosen, "\n")
+cat("  INCV random  selected K =", result2$k.loss, "\n")
 cat("  ECV selected:", ecv$dev.model, "\n")
 cat("  NCV selected:", ncv$dev.model, "\n")

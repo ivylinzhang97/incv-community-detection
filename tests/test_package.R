@@ -184,9 +184,11 @@ cat("\n--- INCV random split ---\n")
 check("nscv.random.split: basic run", {
   res <- nscv.random.split(net_incv$adjacency, k.vec = 2:4,
                            split = 0.66, ite = 10)
-  cat("       k.chosen =", res$k.chosen, "\n")
-  stopifnot(res$k.chosen %in% 2:4)
+  cat("       k.loss =", res$k.loss, " k.mse =", res$k.mse, "\n")
+  stopifnot(res$k.loss %in% 2:4)
+  stopifnot(res$k.mse %in% 2:4)
   stopifnot(length(res$cv.loss) == 3)
+  stopifnot(length(res$cv.mse) == 3)
 })
 
 # ---- 8. ECV for blockmodel ---------------------------------------------------
